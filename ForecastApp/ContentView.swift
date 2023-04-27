@@ -9,13 +9,10 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
-        }
-        .padding()
+        let cachedDictionary = UserDefaults.standard.dictionary(forKey: Constants.lastSeachedType)
+        
+        let currentWeatherUseCase = DefaultFetchCurrentWeatherUseCase(currentWeatherGateway: APICurrentWeatherGatewayImplementation(apiClient: ApiClientImplementation(urlSession: URLSession.shared)))
+        DashboardView(currentWeatherViewModel: CurrentWeatherViewModel(usecase: currentWeatherUseCase), weatherDataViewModel: ForecastViewModel(usecase: DefaultFetchRestaurantsUseCase(weatherGateway: APIWeatherGatewayImplementation(apiClient: ApiClientImplementation(urlSession: URLSession.shared))), currentWeatherUsecase: currentWeatherUseCase))
     }
 }
 
