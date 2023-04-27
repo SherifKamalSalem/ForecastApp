@@ -1,0 +1,56 @@
+//
+//  WeatherRowViewModel.swift
+//  ForecastApp
+//
+//  Created by Sherif Kamal on 25/04/2023.
+//
+
+import Foundation
+import SwiftUI
+
+struct WeatherRowViewModel: Identifiable {
+    private let item: Item
+  
+  var id: String {
+    return day + temperature + title
+  }
+  
+  var day: String {
+    return dayFormatter.string(from: item.date)
+  }
+  
+  var month: String {
+    return monthFormatter.string(from: item.date)
+  }
+  
+  var temperature: String {
+    return String(format: "%.1f", item.main.temp)
+  }
+  
+  var title: String {
+    guard let title = item.weather.first?.main.rawValue else { return "" }
+    return title
+  }
+  
+  var fullDescription: String {
+    guard let description = item.weather.first?.weatherDescription else { return "" }
+    return description
+  }
+  
+  init(item: Item) {
+    self.item = item
+  }
+}
+
+// Used to hash on just the day in order to produce a single view model for each
+// day when there are multiple items per each day.
+extension WeatherRowViewModel: Hashable {
+  static func == (lhs: WeatherRowViewModel, rhs: WeatherRowViewModel) -> Bool {
+    return lhs.day == rhs.day
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(self.day)
+  }
+}
+
